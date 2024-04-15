@@ -1,7 +1,6 @@
 // This is ported from go-fuzz versifier
 import * as assert from "assert";
-
-const DeepEqual = require('deep-equal');
+import * as fastDeepEqual from "fast-deep-equal";
 
 const CHAR_CODE_A = 65;
 const CHAR_CODE_Z = 90;
@@ -780,7 +779,7 @@ function structureLists(nn: Node[]) : Node[] {
                 // @ts-ignore
                 union[k] = true;
               }
-              if (DeepEqual(elems[0].tok, union) || DeepEqual(elems[1].tok, union)) {
+              if (fastDeepEqual(elems[0].tok, union) || fastDeepEqual(elems[1].tok, union)) {
                   break
               }
             }
