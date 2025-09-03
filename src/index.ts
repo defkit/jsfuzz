@@ -12,13 +12,13 @@ function startFuzzer(argv: any) {
         const targetPath = path.resolve(argv.target);
         const targetModule = require(targetPath);
         
-        // Check if the module exports a mutation function
+        // Check if the module exports a `mutate` function
         if (typeof targetModule.mutate === 'function') {
             customMutationFn = targetModule.mutate;
             console.log(`Using custom mutation function from: ${targetPath}`);
         }
         
-        // Validate that fuzz function exists
+        // Validate that `fuzz` function exists
         if (typeof targetModule.fuzz !== 'function') {
             console.error(`Error: ${targetPath} must export a 'fuzz' function`);
             process.exit(1);

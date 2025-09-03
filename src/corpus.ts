@@ -3,7 +3,6 @@ import * as path from "path";
 import {uint16, uint32} from "./math";
 var crypto = require('crypto');
 
-// Type definition for custom mutation function
 export type MutationFunction = (buf: Buffer) => Buffer;
 
 const INTERESTING8 = new Uint8Array([-128, -1, 0, 1, 16, 32, 64, 100, 127]);
