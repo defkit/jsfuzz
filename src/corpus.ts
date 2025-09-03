@@ -3,6 +3,9 @@ import * as path from "path";
 import {uint16, uint32} from "./math";
 var crypto = require('crypto');
 
+// Type definition for custom mutation function
+export type MutationFunction = (buf: Buffer) => Buffer;
+
 const INTERESTING8 = new Uint8Array([-128, -1, 0, 1, 16, 32, 64, 100, 127]);
 const INTERESTING16 = new Uint16Array([-32768, -129, 128, 255, 256, 512, 1000, 1024, 4096, 32767, -128, -1, 0, 1, 16, 32, 64, 100, 127]);
 const INTERESTING32 = new Uint32Array([-2147483648, -100663046, -32769, 32768, 65535, 65536, 100663045, 2147483647, -32768, -129, 128, 255, 256, 512, 1000, 1024, 4096, 32767, -128, -1, 0, 1, 16, 32, 64, 100, 127]);
@@ -14,10 +17,12 @@ export class Corpus {
     private maxInputSize: number;
     private seedLength: number;
     private readonly onlyAscii: boolean;
+    private customMutationFn?: MutationFunction;
 
-    constructor(dir: string[], onlyAscii: boolean) {
+    constructor(dir: string[], onlyAscii: boolean, customMutationFn?: MutationFunction) {
         this.inputs = [];
         this.onlyAscii = onlyAscii;
+        this.customMutationFn = customMutationFn;
         this.maxInputSize = 4096;
         for (let i of dir) {
             if (!fs.existsSync(i)) {
@@ -58,7 +63,13 @@ export class Corpus {
             return buf;
         }
         const buffer = this.inputs[this.rand(this.inputs.length)];
-        return this.mutate(buffer);
+        
+        // Use custom mutation function if provided, otherwise use default mutation
+        if (this.customMutationFn) {
+            return this.customMutationFn(buffer);
+        } else {
+            return this.mutate(buffer);
+        }
     }
 
     putBuffer(buf: Buffer) {

@@ -1,8 +1,33 @@
 #!/usr/bin/env node
 import {Fuzzer} from './fuzzer';
+import {MutationFunction} from './corpus';
 import * as yargs from 'yargs';
+import * as path from 'path';
 
 function startFuzzer(argv: any) {
+    let customMutationFn: MutationFunction | undefined = undefined;
+    
+    // Load custom mutation function from the same module as the fuzz target
+    try {
+        const targetPath = path.resolve(argv.target);
+        const targetModule = require(targetPath);
+        
+        // Check if the module exports a mutation function
+        if (typeof targetModule.mutate === 'function') {
+            customMutationFn = targetModule.mutate;
+            console.log(`Using custom mutation function from: ${targetPath}`);
+        }
+        
+        // Validate that fuzz function exists
+        if (typeof targetModule.fuzz !== 'function') {
+            console.error(`Error: ${targetPath} must export a 'fuzz' function`);
+            process.exit(1);
+        }
+    } catch (error) {
+        console.error(`Error loading target module: ${error}`);
+        process.exit(1);
+    }
+    
     const fuzzer = new Fuzzer(
         argv.target,
         argv.dir,
@@ -12,7 +37,8 @@ function startFuzzer(argv: any) {
         argv.regression,
         argv.onlyAscii,
         argv.versifier, 
-        argv.fuzzTime);
+        argv.fuzzTime,
+        customMutationFn);
     fuzzer.start()
 }
 

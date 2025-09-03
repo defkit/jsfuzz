@@ -1,5 +1,5 @@
 // const cp = require('child_process');
-import {Corpus} from "./corpus";
+import {Corpus, MutationFunction} from "./corpus";
 import * as fs from "fs";
 import {ChildProcess, fork} from "child_process";
 import {ManageMessageType, WorkerMessage, WorkerMessageType} from "./protocol";
@@ -44,9 +44,10 @@ export class Fuzzer {
                 regression: boolean,
                 onlyAscii: boolean,
                 versifier: boolean,
-                fuzzTime: number) {
+                fuzzTime: number,
+                customMutationFn?: MutationFunction) {
         this.target = target;
-        this.corpus = new Corpus(dir, onlyAscii);
+        this.corpus = new Corpus(dir, onlyAscii, customMutationFn);
         this.onlyAscii = onlyAscii;
         this.versifier = versifier;
         this.verse = null;
