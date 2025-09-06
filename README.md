@@ -11,6 +11,13 @@ security bugs that arise from both logic bugs and Denial-of-Service caused by ha
 
 Fuzzing can be seen as a powerful and efficient strategy in real-world software in addition to classic unit-tests.
 
+## Installation
+
+```bash
+npm install -g .
+jsfuzz --version
+```
+
 ## Usage
 
 ### Fuzz Target
@@ -79,7 +86,6 @@ module.exports = {
 The next step is to download js-fuzz and then run your fuzzer
 
 ```bash
-npm config set @gitlab-org:registry https://gitlab.com/api/v4/packages/npm/ && npm i -g @gitlab-org/jsfuzz
 jsfuzz ./examples/jpeg/fuzz.js corpus
 
 # Output:
