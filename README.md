@@ -1,3 +1,7 @@
+This is a public fork of [jsfuzz](https://gitlab.com/gitlab-org/security-products/analyzers/fuzzers/jsfuzz). The reason why this repo exists:
+1) Jsfuzz is deprecated, see [comment](https://gitlab.com/gitlab-org/security-products/analyzers/fuzzers/jsfuzz/-/merge_requests/34#note_2733647851)
+2) I hate gitlab UI
+
 # Jsfuzz: coverage-guided fuzz testing for Javascript
 
 Jsfuzz is coverage-guided [fuzzer](https://developer.mozilla.org/en-US/docs/Glossary/Fuzzing) for testing javascript/nodejs packages.
@@ -17,7 +21,15 @@ The first step is to implement the following function (also called a fuzz target
 function fuzz(buf) {
   // call your package with buf  
 }
+
+// optional custom mutator
+function mutate(buf) {
+  // return mutated buf
+}
+
 module.exports = {
+    // optional 
+    mutate
     fuzz
 };
 ```
