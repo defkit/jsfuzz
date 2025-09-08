@@ -57,18 +57,15 @@ export class Corpus {
             return this.inputs[this.seedLength];
         }
         if (this.inputs.length === 0) {
-            const buf = Buffer.alloc(0, 0);
+            let buf = Buffer.alloc(0, 0);
+            buf = this.mutate(buf);
             this.putBuffer(buf);
             return buf;
         }
         const buffer = this.inputs[this.rand(this.inputs.length)];
-        
-        // Use custom mutation function if provided, otherwise use default mutation
-        if (this.customMutationFn) {
-            return this.customMutationFn(buffer);
-        } else {
-            return this.mutate(buffer);
-        }
+    
+        return this.mutate(buffer);
+
     }
 
     putBuffer(buf: Buffer) {
@@ -129,6 +126,12 @@ export class Corpus {
     }
 
     mutate(buf: Buffer) {
+        if (this.customMutationFn) {
+            //process.stdout.write(`Buf: ${buf.toString('hex')}\n`);
+            const res = this.customMutationFn(buf);
+            //process.stdout.write(`Res: ${res.toString('hex')}\n`);
+            return res;
+        }
         let res = Buffer.allocUnsafe(buf.length);
         buf.copy(res, 0, 0, buf.length);
         const nm = 1 + this.Exp2();

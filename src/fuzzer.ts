@@ -125,7 +125,7 @@ export class Fuzzer {
                 this.clearIntervals();
 		process.exitCode = 1;
                 return;
-            } else if (m.coverage > this.total_coverage) {
+            } else if (m.coverage >= this.total_coverage) {
                 
                 // begin new time if cov was changes
                 if (this.fuzzTime != 0){
